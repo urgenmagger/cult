@@ -7,6 +7,7 @@ import {View, Text, TextInput, StyleSheet} from 'react-native';
 
 import {RootStackList, Screens} from '../../navigation';
 import {BUTTONWIDTH, Button} from '../../components/Button';
+import {IS_REQUIRED, MIN_LONG, NEED_VALID_EMAIL} from '../../utils/constants';
 
 interface Props {
   navigation: NavigationProp<RootStackList>;
@@ -41,32 +42,34 @@ export const Login: FC<Props> = ({navigation}) => {
       <Formik
         initialValues={{email: '', password: ''}}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Invalid email').required('Required'),
-          password: Yup.string().min(6, 'Too Short!').required('Required'),
+          email: Yup.string().email(NEED_VALID_EMAIL).required(IS_REQUIRED),
+          password: Yup.string().min(6, MIN_LONG).required(IS_REQUIRED),
         })}
         onSubmit={handleLogin}>
         {({handleChange, handleSubmit, values, errors, touched}) => (
           <>
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              onChangeText={handleChange('email')}
-              value={values.email}
-            />
-            {touched.email && errors.email && (
-              <Text style={styles.error}>{errors.email}</Text>
-            )}
+            <View style={styles.inputBlock}>
+              <TextInput
+                style={styles.input}
+                placeholder="Почта"
+                onChangeText={handleChange('email')}
+                value={values.email}
+              />
+              {touched.email && errors.email && (
+                <Text style={styles.error}>{errors.email}</Text>
+              )}
 
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              onChangeText={handleChange('password')}
-              value={values.password}
-              secureTextEntry
-            />
-            {touched.password && errors.password && (
-              <Text style={styles.error}>{errors.password}</Text>
-            )}
+              <TextInput
+                style={styles.input}
+                placeholder="Пароль"
+                onChangeText={handleChange('password')}
+                value={values.password}
+                secureTextEntry
+              />
+              {touched.password && errors.password && (
+                <Text style={styles.error}>{errors.password}</Text>
+              )}
+            </View>
             <Button onPress={() => handleSubmit()} label="Войти" />
           </>
         )}
@@ -82,17 +85,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    paddingVertical: 15,
-    marginVertical: 10,
-    backgroundColor: '#DEE2E5',
-    borderRadius: 50,
-    width: BUTTONWIDTH,
     height: 60,
+    borderRadius: 50,
+    marginBottom: 15,
+    marginVertical: 10,
+    width: BUTTONWIDTH,
+    paddingVertical: 15,
     paddingHorizontal: 10,
-    marginBottom: 10,
+    backgroundColor: '#DEE2E5',
+  },
+  inputBlock: {
+    marginBottom: 40,
   },
   error: {
     color: 'red',
-    marginBottom: 10,
+    // marginBottom: 5,
+    marginLeft: 5,
   },
 });
